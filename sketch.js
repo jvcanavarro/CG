@@ -89,9 +89,25 @@ class Polyline {
     }    
 }
 
+class Filler {
+    flood(x, y) {
+        if (check_color(x, y)) {
+            paint(x, y);
+            this.flood(x + 1, y);
+            this.flood(x, y + 1);
+            this.flood(x - 1, y);
+            this.flood(x, y - 1);
+        }
+    }
+}
+
 function paint(x, y) {
     if (color[x * w + y])
         color[x * w + y] = false;
+}
+
+function check_color(x, y) {
+    return color[x * w + y]
 }
 
 var x = [];
@@ -133,6 +149,10 @@ function setup() {
     poly_button = createButton('Polyline');
     poly_button.position(1000, 140);
     poly_button.mousePressed(startPolyline);
+
+    fill_button = createButton('Fill');
+    fill_button.position(1000, 170);
+    fill_button.mousePressed(startFill);
     
     clear_button = createButton('Clear');
     clear_button.position(1000, 800);
@@ -153,6 +173,15 @@ function startCircle(radius) {
 function startPolyline() {
     poly = new Polyline();
     poly.drawLines();
+}
+
+function startFill() {
+    starting_point = coords.pop();
+    x0 = starting_point[0];
+    y0 = starting_point[1];
+    filler = new Filler();
+    color[x0 * w + y0] = true;
+    filler.flood(x0, y0);
 }
 
 // Grid might become a class
