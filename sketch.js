@@ -76,6 +76,19 @@ class Circle {
     }
 }
 
+class Polyline {
+    drawLines() {
+        var points = [];
+        var bres;
+        for (var i = 0; i < coords.length - 1; i++) {
+            points.push(coords[i], coords[i+1]);
+            bres = new Bresenham(points);
+            bres.drawLine()
+            points = [];
+        }
+    }    
+}
+
 function paint(x, y) {
     if (color[x * w + y])
         color[x * w + y] = false;
@@ -116,6 +129,10 @@ function setup() {
     circle_button = createButton('Draw');
     circle_button.position(1080, 100);
     circle_button.mousePressed(startCircle);
+
+    poly_button = createButton('Polyline');
+    poly_button.position(1000, 140);
+    poly_button.mousePressed(startPolyline);
     
     clear_button = createButton('Clear');
     clear_button.position(1000, 800);
@@ -131,6 +148,11 @@ function startCircle(radius) {
     radius = circle_input.value()
     circle = new Circle(coords, parseInt(radius, 10));
     circle.drawCircle();
+}
+
+function startPolyline() {
+    poly = new Polyline();
+    poly.drawLines();
 }
 
 // Grid might become a class
