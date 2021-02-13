@@ -1,3 +1,5 @@
+//const { round } = require("mathjs");
+
 class Bresenham {
     constructor (coords) {
         this.x0 = coords[0][0];
@@ -73,6 +75,53 @@ class Circle {
         paint(xc - y, yc + x); 
         paint(xc + y, yc - x); 
         paint(xc - y, yc - x); 
+    }
+}
+
+class Curve {
+    constructor(coords) {
+        this.startingPoint = coords[0];
+        print(this.startingPoint);
+        this.points = coords;
+    }
+
+    dot(point, t) {
+        point[0] = Math.round(point[0] * t);
+        point[1] = Math.round(point[1] * t);
+        return point
+    }
+
+    sum (p1, p2) {
+        return [p1[0] + p2[0], p1[1] + p2[1]] 
+    }
+
+    computePoint(t){
+        var n = this.points.length - 1;
+        for (var r = 1; r <= n; r++) {
+            for (var i = 0; i <= n - r; i++) {
+                this.points[i] = this.sum(
+                    this.dot(this.points[i], (1 - t)),
+                    this.dot(this.points[i + 1], t)
+                );
+            }
+        }
+        return this.points[0];
+    }
+    
+    drawCurve() {
+        var pontos = [];
+        for (var t = 0; t <= 1; t += 0.1) {
+            var finalPoint = this.computePoint(t);
+            pontos.push([this.startingPoint[0], this.startingPoint[1]])
+            pontos.push([finalPoint[0], finalPoint[1]]);
+            var bres = new Bresenham(pontos);
+            bres.drawLine();
+            print('start', this.startingPoint); 
+            print('final', finalPoint);
+            this.startingPoint = finalPoint;
+            pontos = [];
+        }
+
     }
 }
 
@@ -153,6 +202,10 @@ function setup() {
     fill_button = createButton('Fill');
     fill_button.position(1000, 170);
     fill_button.mousePressed(startFill);
+
+    curve_button = createButton('Curve');
+    curve_button.position(1000, 200);
+    curve_button.mousePressed(startCurve);
     
     clear_button = createButton('Clear');
     clear_button.position(1000, 800);
@@ -182,6 +235,11 @@ function startFill() {
     filler = new Filler();
     color[x0 * w + y0] = true;
     filler.flood(x0, y0);
+}
+
+function startCurve() {
+    curve = new Curve(coords);
+    curve.drawCurve()
 }
 
 // Grid might become a class
