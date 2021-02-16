@@ -81,18 +81,7 @@ class Circle {
 class Curve {
     constructor(coords) {
         this.startingPoint = coords[0];
-        print(this.startingPoint);
-        this.points = coords;
-    }
-
-    dot(point, t) {
-        point[0] = Math.round(point[0] * t);
-        point[1] = Math.round(point[1] * t);
-        return point
-    }
-
-    sum (p1, p2) {
-        return [p1[0] + p2[0], p1[1] + p2[1]] 
+        this.points = Array.from(coords);
     }
 
     computePoint(t){
@@ -109,19 +98,31 @@ class Curve {
     }
     
     drawCurve() {
-        var pontos = [];
-        for (var t = 0; t <= 1; t += 0.1) {
+        for (var t = 0; t <= 1; t += 0.15) {
+            var pontos = [];
             var finalPoint = this.computePoint(t);
+            
             pontos.push([this.startingPoint[0], this.startingPoint[1]])
             pontos.push([finalPoint[0], finalPoint[1]]);
+            
             var bres = new Bresenham(pontos);
             bres.drawLine();
-            print('start', this.startingPoint); 
-            print('final', finalPoint);
             this.startingPoint = finalPoint;
-            pontos = [];
         }
+    }
+    
+    dot(point, t) {
+        var result = []
+        result[0] = Math.round(point[0] * t);
+        result[1] = Math.round(point[1] * t);
+        return result
+    }
 
+    sum (p1, p2) {
+        var result = []
+        result[0] = p1[0] + p2[0];
+        result[1] = p1[1] + p2[1];
+        return result 
     }
 }
 
