@@ -15,12 +15,12 @@ class Bresenham {
         var sy = this.y0 < this.y1 ? 1 : -1;
         var err = dx + dy;
         var i = 0;
-        
+
         paint(this.x1, this.y1);
         while(true) {
             if (this.x0 == this.x1 && this.y0 == this.y1)
                 break;
-            
+
             var e2 = 2 * err;
 
             if (e2 >= dy) {
@@ -66,15 +66,15 @@ class Circle {
     }
 
     paintPixel(xc, yc, x, y) {
-        paint(xc + x, yc + y); 
-        paint(xc - x, yc + y); 
-        paint(xc + x, yc - y); 
-        paint(xc - x, yc - y); 
+        paint(xc + x, yc + y);
+        paint(xc - x, yc + y);
+        paint(xc + x, yc - y);
+        paint(xc - x, yc - y);
 
-        paint(xc + y, yc + x); 
-        paint(xc - y, yc + x); 
-        paint(xc + y, yc - x); 
-        paint(xc - y, yc - x); 
+        paint(xc + y, yc + x);
+        paint(xc - y, yc + x);
+        paint(xc + y, yc - x);
+        paint(xc - y, yc - x);
     }
 }
 
@@ -96,21 +96,21 @@ class Curve {
         }
         return this.points[0];
     }
-    
+
     drawCurve() {
         for (var t = 0; t <= 1; t += 0.15) {
-            var pontos = [];
+            var points = [];
             var finalPoint = this.computePoint(t);
-            
-            pontos.push([this.startingPoint[0], this.startingPoint[1]])
-            pontos.push([finalPoint[0], finalPoint[1]]);
-            
-            var bres = new Bresenham(pontos);
+
+            points.push([this.startingPoint[0], this.startingPoint[1]])
+            points.push([finalPoint[0], finalPoint[1]]);
+
+            var bres = new Bresenham(points);
             bres.drawLine();
             this.startingPoint = finalPoint;
         }
     }
-    
+
     dot(point, t) {
         var result = []
         result[0] = Math.round(point[0] * t);
@@ -122,7 +122,7 @@ class Curve {
         var result = []
         result[0] = p1[0] + p2[0];
         result[1] = p1[1] + p2[1];
-        return result 
+        return result;
     }
 }
 
@@ -136,7 +136,7 @@ class Polyline {
             bres.drawLine()
             points = [];
         }
-    }    
+    }
 }
 
 class Filler {
@@ -147,6 +147,25 @@ class Filler {
             this.flood(x, y + 1);
             this.flood(x - 1, y);
             this.flood(x, y - 1);
+        }
+    }
+}
+
+class Translation {
+    constructor(coords, tx, ty) {
+        this.points = coords;
+        this.matrix = [[1, 0, ty], [0, 1, tx], [0, 0, 1]];
+    }
+
+    drawTranslation() {
+        clearGrid();
+        for (var point of this.points) {
+            var tpoint = [0, 0, 1];
+            var vector = [...point, 1];
+            for (var i = 0; i < 3; i++) 
+                for (var j = 0; j < 3; j++) 
+                    tpoint[i] += this.matrix[i][j] * vector[j];
+            paint(tpoint[0], tpoint[1]);
         }
     }
 }
@@ -177,7 +196,7 @@ function setup() {
         x[i] = w + i * w;
         y[i] = w + i * w;
     }
-    
+
     clearGrid();
 
     // Refactor
@@ -193,7 +212,7 @@ function setup() {
     circle_input.position(1000, 100);
     circle_input.size(70);
     circle_button = createButton('Draw');
-    circle_button.position(1080, 100);
+    circle_button.position(1100, 100);
     circle_button.mousePressed(startCircle);
 
     poly_button = createButton('Polyline');
@@ -207,7 +226,21 @@ function setup() {
     curve_button = createButton('Curve');
     curve_button.position(1000, 200);
     curve_button.mousePressed(startCurve);
-    
+
+    trans_title = createElement('h4', 'Translation');
+    trans_title.position(1000, 230);
+    trans_subtext = createElement('h5', 'Directions');
+    trans_subtext.position(1000, 250);
+    trans_xinput = createInput();
+    trans_xinput.position(1000, 290);
+    trans_xinput.size(70);
+    trans_yinput = createInput();
+    trans_yinput.position(1100, 290);
+    trans_yinput.size(70);
+    trans_button = createButton('Draw');
+    trans_button.position(1200, 290);
+    trans_button.mousePressed(startTranslation);
+
     clear_button = createButton('Clear');
     clear_button.position(1000, 800);
     clear_button.mousePressed(clearGrid);
@@ -219,7 +252,7 @@ function startBresenham() {
 }
 
 function startCircle(radius) {
-    radius = circle_input.value()
+    radius = circle_input.value();
     circle = new Circle(coords, parseInt(radius, 10));
     circle.drawCircle();
 }
@@ -240,15 +273,21 @@ function startFill() {
 
 function startCurve() {
     curve = new Curve(coords);
-    curve.drawCurve()
+    curve.drawCurve();
 }
 
-// Grid might become a class
+function startTranslation() {
+    tx = parseInt(trans_xinput.value(), 10);
+    ty = parseInt(trans_yinput.value(), 10);
+    trans = new Translation(coords, tx, -ty);
+    trans.drawTranslation();
+}
+
 function clearGrid() {
     for (var i = 0; i < w**2; i++) {
         color[i] = true;
     }
-    coords = []
+    coords = [];
 }
 
 function draw() {
