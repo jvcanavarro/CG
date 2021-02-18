@@ -1,193 +1,13 @@
-//const { round } = require("mathjs");
-
-class Bresenham {
-    constructor (coords) {
-        this.x0 = coords[0][0];
-        this.y0 = coords[0][1];
-        this.x1 = coords[1][0];
-        this.y1 = coords[1][1];
-    }
-
-    drawLine() {
-        var dx = abs(this.x1 - this.x0);
-        var sx = this.x0 < this.x1 ? 1 : -1;
-        var dy = -abs(this.y1 - this.y0)
-        var sy = this.y0 < this.y1 ? 1 : -1;
-        var err = dx + dy;
-        var i = 0;
-
-        paint(this.x1, this.y1);
-        while(true) {
-            if (this.x0 == this.x1 && this.y0 == this.y1)
-                break;
-
-            var e2 = 2 * err;
-
-            if (e2 >= dy) {
-                err += dy;
-                this.x0 += sx;
-            }
-            if (e2 <= dx) {
-                err += dx;
-                this.y0 += sy;
-            }
-            paint(this.x0, this.y0);
-        }
-    }
-}
-
-class Circle {
-    constructor (coords, radius) {
-        this.x0 = coords[0][0];
-        this.y0 = coords[0][1];
-        this.p = 3 - (2 * radius);
-        this.x = 0;
-        this.y = radius;
-        color[this.x0 * w + this.y0] = true
-    }
-
-    drawCircle() {
-        this.paintPixel(this.x0, this.y0, this.x, this.y);
-
-        while (this.x < this.y)
-        {
-            this.x++;
-            if (this.p < 0)
-            {
-                this.p += (4 * this.x) + 6;
-            }
-            else
-            {
-                this.y--;
-                this.p += 4 * (this.x - this.y) + 10;
-            }
-            this.paintPixel(this.x0, this.y0, this.x, this.y);
-        }
-    }
-
-    paintPixel(xc, yc, x, y) {
-        paint(xc + x, yc + y);
-        paint(xc - x, yc + y);
-        paint(xc + x, yc - y);
-        paint(xc - x, yc - y);
-
-        paint(xc + y, yc + x);
-        paint(xc - y, yc + x);
-        paint(xc + y, yc - x);
-        paint(xc - y, yc - x);
-    }
-}
-
-class Curve {
-    constructor(coords) {
-        this.startingPoint = coords[0];
-        this.points = Array.from(coords);
-    }
-
-    computePoint(t){
-        var n = this.points.length - 1;
-        for (var r = 1; r <= n; r++) {
-            for (var i = 0; i <= n - r; i++) {
-                this.points[i] = this.sum(
-                    this.dot(this.points[i], (1 - t)),
-                    this.dot(this.points[i + 1], t)
-                );
-            }
-        }
-        return this.points[0];
-    }
-
-    drawCurve() {
-        for (var t = 0; t <= 1; t += 0.15) {
-            var points = [];
-            var finalPoint = this.computePoint(t);
-
-            points.push([this.startingPoint[0], this.startingPoint[1]])
-            points.push([finalPoint[0], finalPoint[1]]);
-
-            var bres = new Bresenham(points);
-            bres.drawLine();
-            this.startingPoint = finalPoint;
-        }
-    }
-
-    dot(point, t) {
-        var result = []
-        result[0] = Math.round(point[0] * t);
-        result[1] = Math.round(point[1] * t);
-        return result
-    }
-
-    sum (p1, p2) {
-        var result = []
-        result[0] = p1[0] + p2[0];
-        result[1] = p1[1] + p2[1];
-        return result;
-    }
-}
-
-class Polyline {
-    drawLines() {
-        var points = [];
-        var bres;
-        for (var i = 0; i < coords.length - 1; i++) {
-            points.push(coords[i], coords[i+1]);
-            bres = new Bresenham(points);
-            bres.drawLine()
-            points = [];
-        }
-    }
-}
-
-class Filler {
-    flood(x, y) {
-        if (check_color(x, y)) {
-            paint(x, y);
-            this.flood(x + 1, y);
-            this.flood(x, y + 1);
-            this.flood(x - 1, y);
-            this.flood(x, y - 1);
-        }
-    }
-}
-
-class Translation {
-    constructor(tx, ty) {
-        this.points = getTruePoints();
-        this.matrix = [[1, 0, ty], [0, 1, tx], [0, 0, 1]];
-    }
-
-    drawTranslation() {
-        clearGrid();
-        for (var point of this.points) {
-            var tpoint = [0, 0, 1];
-            var vector = [...point, 1];
-            for (var i = 0; i < 3; i++) 
-                for (var j = 0; j < 3; j++) 
-                    tpoint[i] += this.matrix[i][j] * vector[j];
-            paint(tpoint[0], tpoint[1]);
-        }
-    }
-}
-
-function paint(x, y) {
-    if (color[x * w + y])
-        color[x * w + y] = false;
-}
-
-function check_color(x, y) {
-    return color[x * w + y]
-}
-
 var x = [];
 var y = [];
-var color = [];
 var w = 30;
 
 var start = [];
 var end = [];
-let coords = [];
+var color = [];
+var coords = [];
 
+const hpos = 1000;
 
 function setup() {
     createCanvas(1500, 1000);
@@ -201,44 +21,44 @@ function setup() {
 
     // Refactor
     bres_button = createButton('Bresenham');
-    bres_button.position(1000, 20);
+    bres_button.position(hpos, 20);
     bres_button.mousePressed(startBresenham);
 
     circle_title = createElement('h4', 'Circle');
-    circle_title.position(1000, 40);
+    circle_title.position(hpos, 40);
     circle_subtext = createElement('h5', 'Radius');
-    circle_subtext.position(1000, 60);
+    circle_subtext.position(hpos, 60);
     circle_input = createInput();
-    circle_input.position(1000, 100);
+    circle_input.position(hpos, 100);
     circle_input.size(70);
     circle_button = createButton('Draw');
-    circle_button.position(1100, 100);
+    circle_button.position(hpos + 100, 100);
     circle_button.mousePressed(startCircle);
 
     poly_button = createButton('Polyline');
-    poly_button.position(1000, 140);
+    poly_button.position(hpos, 140);
     poly_button.mousePressed(startPolyline);
 
     fill_button = createButton('Fill');
-    fill_button.position(1000, 170);
+    fill_button.position(hpos, 170);
     fill_button.mousePressed(startFill);
 
     curve_button = createButton('Curve');
-    curve_button.position(1000, 200);
+    curve_button.position(hpos, 200);
     curve_button.mousePressed(startCurve);
 
     trans_title = createElement('h4', 'Translation');
-    trans_title.position(1000, 230);
-    trans_subtext = createElement('h5', 'Directions');
-    trans_subtext.position(1000, 250);
+    trans_title.position(hpos, 230);
+    trans_subtext = createElement('h5', 'Tx & Ty');
+    trans_subtext.position(hpos, 250);
     trans_xinput = createInput();
-    trans_xinput.position(1000, 290);
+    trans_xinput.position(hpos, 290);
     trans_xinput.size(70);
     trans_yinput = createInput();
-    trans_yinput.position(1100, 290);
+    trans_yinput.position(hpos + 100, 290);
     trans_yinput.size(70);
     trans_button = createButton('Draw');
-    trans_button.position(1200, 290);
+    trans_button.position(hpos + 200, 290);
     trans_button.mousePressed(startTranslation);
 
     clear_button = createButton('Clear');
@@ -308,10 +128,10 @@ function mousePressed() {
 }
 
 function clearGrid() {
+    coords = [];
     for (var i = 0; i < w**2; i++) {
         color[i] = true;
     }
-    coords = [];
 }
 
 function getTruePoints() {
@@ -323,4 +143,13 @@ function getTruePoints() {
         }
     }
     return points;
+}
+
+function paint(x, y) {
+    if (color[x * w + y])
+        color[x * w + y] = false;
+}
+
+function getColor(x, y) {
+    return color[x * w + y]
 }
