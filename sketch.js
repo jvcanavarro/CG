@@ -152,8 +152,8 @@ class Filler {
 }
 
 class Translation {
-    constructor(coords, tx, ty) {
-        this.points = coords;
+    constructor(tx, ty) {
+        this.points = getTruePoints();
         this.matrix = [[1, 0, ty], [0, 1, tx], [0, 0, 1]];
     }
 
@@ -279,15 +279,8 @@ function startCurve() {
 function startTranslation() {
     tx = parseInt(trans_xinput.value(), 10);
     ty = parseInt(trans_yinput.value(), 10);
-    trans = new Translation(coords, tx, -ty);
+    trans = new Translation(tx, -ty);
     trans.drawTranslation();
-}
-
-function clearGrid() {
-    for (var i = 0; i < w**2; i++) {
-        color[i] = true;
-    }
-    coords = [];
 }
 
 function draw() {
@@ -296,8 +289,7 @@ function draw() {
     stroke(0);
     for (var i = 0; i < y.length; i++) {
         for (var j = 0; j < w; j++) {
-            if (color[i * w + j]) fill("white");
-            else fill("pink");
+            color[i * w + j] ? fill("white") : fill("pink");
             rect(x[j], y[i], w, w);
         }
     }
@@ -313,4 +305,22 @@ function mousePressed() {
             }
         }
     }
+}
+
+function clearGrid() {
+    for (var i = 0; i < w**2; i++) {
+        color[i] = true;
+    }
+    coords = [];
+}
+
+function getTruePoints() {
+    var points = [];
+    for (var i = 0; i < w; i++) {
+        for (var j = 0; j < w; j++) {
+            if (!color[i * w + j])
+                points.push([i, j]);
+        }
+    }
+    return points;
 }
