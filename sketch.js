@@ -63,9 +63,9 @@ function setup() {
     trans_button.mousePressed(startTranslation);
 
     rot_title = createElement('h4', 'Rotation');
-    rot_title.position(1000, 320);
+    rot_title.position(hpos, 320);
     rot_subtext = createElement('h5', 'Degrees');
-    rot_subtext.position(1000, 340);
+    rot_subtext.position(hpos, 340);
     rot_button = createButton('Rotate');
     rot_button.position(1090, 380);
     rot_button.mousePressed(startRotation);
@@ -74,7 +74,7 @@ function setup() {
     degree_input.size(70);
 
     scan_button = createButton('Sweep');
-    scan_button.position(hpos, 400);
+    scan_button.position(hpos, 420);
     scan_button.mousePressed(startScanline);
 
 
@@ -124,7 +124,8 @@ function startRotation () {
     degrees = parseInt(degree_input.value(), 10);
     pivot = coords.pop();
     rot = new Rotation(coords, degrees, pivot);
-    rot.applyRotation()
+    rot.applyRotation();
+}
 
 function startScanline() {
     scan = new Scanline();
