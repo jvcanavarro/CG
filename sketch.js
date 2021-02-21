@@ -7,9 +7,10 @@ var end = [];
 var color = [];
 var coords = [];
 
-const hpos = 1000;
 
 function setup() {
+    const hpos = 1000;
+
     createCanvas(1500, 1000);
 
     for (var i = 0; i < w; i++) {
@@ -61,6 +62,17 @@ function setup() {
     trans_button.position(hpos + 200, 290);
     trans_button.mousePressed(startTranslation);
 
+    rot_title = createElement('h4', 'Rotation');
+    rot_title.position(1000, 320);
+    rot_subtext = createElement('h5', 'Degrees');
+    rot_subtext.position(1000, 340);
+    rot_button = createButton('Rotate');
+    rot_button.position(1090, 380);
+    rot_button.mousePressed(startRotation);
+    degree_input = createInput();
+    degree_input.position(1000, 380);
+    degree_input.size(70);
+
     clear_button = createButton('Clear');
     clear_button.position(1000, 800);
     clear_button.mousePressed(clearGrid);
@@ -101,6 +113,13 @@ function startTranslation() {
     ty = parseInt(trans_yinput.value(), 10);
     trans = new Translation(tx, -ty);
     trans.drawTranslation();
+}
+
+function startRotation () { 
+    degrees = parseInt(degree_input.value(), 10);
+    pivot = coords.pop();
+    rot = new Rotation(coords, degrees, pivot);
+    rot.applyRotation()
 }
 
 function draw() {
