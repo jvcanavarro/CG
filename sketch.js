@@ -73,6 +73,11 @@ function setup() {
     degree_input.position(1000, 380);
     degree_input.size(70);
 
+    scan_button = createButton('Sweep');
+    scan_button.position(hpos, 400);
+    scan_button.mousePressed(startScanline);
+
+
     clear_button = createButton('Clear');
     clear_button.position(1000, 800);
     clear_button.mousePressed(clearGrid);
@@ -105,7 +110,7 @@ function startFill() {
 
 function startCurve() {
     curve = new Curve(coords);
-    curve.drawCurve();
+    curve.drawCurve()
 }
 
 function startTranslation() {
@@ -120,6 +125,10 @@ function startRotation () {
     pivot = coords.pop();
     rot = new Rotation(coords, degrees, pivot);
     rot.applyRotation()
+
+function startScanline() {
+    scan = new Scanline();
+    scan.sweep();
 }
 
 function draw() {
