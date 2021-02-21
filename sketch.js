@@ -61,6 +61,11 @@ function setup() {
     trans_button.position(hpos + 200, 290);
     trans_button.mousePressed(startTranslation);
 
+    scan_button = createButton('Sweep');
+    scan_button.position(hpos, 330);
+    scan_button.mousePressed(startScanline);
+
+
     clear_button = createButton('Clear');
     clear_button.position(1000, 800);
     clear_button.mousePressed(clearGrid);
@@ -93,7 +98,7 @@ function startFill() {
 
 function startCurve() {
     curve = new Curve(coords);
-    curve.drawCurve();
+    curve.drawCurve()
 }
 
 function startTranslation() {
@@ -101,6 +106,11 @@ function startTranslation() {
     ty = parseInt(trans_yinput.value(), 10);
     trans = new Translation(tx, -ty);
     trans.drawTranslation();
+}
+
+function startScanline() {
+    scan = new Scanline();
+    scan.sweep();
 }
 
 function draw() {
