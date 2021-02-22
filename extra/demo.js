@@ -1,3 +1,8 @@
+/**
+ * @author João Canavarro <joao.canavarro@icen.ufpa.br>
+ * @author Aian Shay <aianshay@gmail.com>
+ */
+
 var scene, camera, renderer, mesh;
 var meshFloor, ambientLight, light;
 var orbitControls, dragControls;
@@ -13,10 +18,12 @@ function init(){
 	camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
 
 	mesh = new THREE.Mesh(
-		new THREE.BoxGeometry(1.5,1.5,1.5),
+		new THREE.TorusGeometry(1, 0.3, 8, 50, 6.3),
+		// new THREE.BoxGeometry(1),
 		new THREE.MeshNormalMaterial({wireframe:USE_WIREFRAME})
 	);
 	mesh.position.y += 1;
+	mesh.position.z -= 5;
 	mesh.receiveShadow = true;
 	mesh.castShadow = true;
 	scene.add(mesh);
