@@ -1,5 +1,6 @@
-var scene, camera, orbitControls, dragControls, renderer, mesh;
+var scene, camera, renderer, mesh;
 var meshFloor, ambientLight, light;
+var orbitControls, dragControls;
 
 var crate, crateTexture, crateNormalMap, crateBumpMap;
 
