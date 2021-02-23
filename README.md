@@ -2,7 +2,7 @@
 
 This repository contains the implementation of the algorithms presented during the discipline of computer graphics, taught in the computer science course.
 
-They were implemented using javascript and the [p5.js](https://p5js.org/) library. Through an interactive grid, the user can select the desired algorithm and view its output.
+They were implemented using Javascript and the [p5.js](https://p5js.org/) library. Through an interactive grid, the user can select the desired algorithm and view its output.
 
 ## Extra Work
 
