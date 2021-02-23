@@ -73,13 +73,9 @@ function setup() {
     degree_input.position(1000, 380);
     degree_input.size(70);
 
-    scan_button = createButton('Sweep');
-    scan_button.position(hpos, 420);
-    scan_button.mousePressed(startScanline);
-
 
     clear_button = createButton('Clear');
-    clear_button.position(1000, 800);
+    clear_button.position(1000, 450);
     clear_button.mousePressed(clearGrid);
 }
 
