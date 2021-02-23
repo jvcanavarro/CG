@@ -6,7 +6,7 @@ They were implemented using Javascript and the [p5.js](https://p5js.org/) librar
 
 ## Extra Work
 
-The `extra` folder contains the implementation of a 3D scene using the [Three.js](https://threejs.org/) library, also for javascript. This scene presents basic concepts of: rendering, shadow and lighting, import of ready models, textures and control of vision and movement.
+The `extra` folder contains the implementation of a 3D scene using the [Three.js](https://threejs.org/) library, also for Javascript. This scene presents basic concepts of: rendering, shadow and lighting, import of ready models, textures and control of vision and movement.
 
 ### How to Run
 
